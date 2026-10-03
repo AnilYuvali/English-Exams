@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Test Results</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="wrap">
+    <header>
+      <h1>Results — Aptis Grammar Practice Test 1</h1>
+      <p>Each question counts once. Matching questions (26–30) count as correct only if all five parts are correct.</p>
+    </header>
+    <div id="out"></div>
+    <div class="center"><a class="btn" href="index.html">Retake the test</a></div>
+  </main>
+
+  <script src="data.js"></script>
+  <script>
+    const LETTERS = "abcdefghij";
+    const out = document.getElementById("out");
+
+    function loadAnswers() {
+      const m = location.hash.match(/^#a=(.*)$/);
+      try { if (m) return JSON.parse(decodeURIComponent(m[1])); } catch (e) {}
+      try { const s = sessionStorage.getItem("testAnswers"); if (s) return JSON.parse(s); } catch (e) {}
+      return null;
+    }
+
+    function el(tag, cls, text) {
+      const e = document.createElement(tag);
+      if (cls) e.className = cls;
+      if (text != null) e.textContent = text;
+      return e;
+    }
+
+    const answers = loadAnswers();
+    if (!answers || answers.length !== QUESTIONS.length) {
+      out.append(el("div", "card", "No test answers found. Please take the test first."));
+    } else {
+      const results = QUESTIONS.map((q, i) => isCorrect(q, answers[i]));
+      const correct = results.filter(Boolean).length;
+      const total = QUESTIONS.length;
+      const pct = Math.round((correct / total) * 100);
+
+      const summary = el("div", "summary");
+      const s1 = el("div", "stat"); s1.append(el("div", "big", pct + "%"), el("div", "label", "Overall score (out of 100%)"));
+      const s2 = el("div", "stat"); s2.append(el("div", "big", `${correct}/${total}`), el("div", "label", "Correct answers / total questions"));
+      summary.append(s1, s2);
+      out.append(summary);
+
+      const review = el("div", "review");
+      QUESTIONS.forEach((q, i) => {
+        const ok = results[i];
+        const item = el("article", "review-item " + (ok ? "ok" : "bad"));
+        const h = el("h3");
+        h.append(el("span", null, `${q.n}. ${q.text}`), el("span", "badge " + (ok ? "ok" : "bad"), ok ? "Correct" : "Incorrect"));
+        item.append(h);
+
+        if (q.type === "mc") {
+          const a = answers[i];
+          const dl = el("dl");
+          dl.append(el("dt", null, "Your answer"), el("dd", null, a == null ? "—" : `${LETTERS[a].toUpperCase()}) ${q.choices[a]}`));
+          dl.append(el("dt", null, "Correct answer"), el("dd", null, `${LETTERS[q.answer].toUpperCase()}) ${q.choices[q.answer]}`));
+          item.append(dl);
+        } else {
+          const t = el("table", "parts");
+          const head = el("tr");
+          ["Item", "Your answer", "Correct answer", ""].forEach(x => head.append(el("th", null, x)));
+          t.append(head);
+          q.prompts.forEach((p, j) => {
+            const mine = answers[i] ? answers[i][j] : null;
+            const good = mine === q.answers[j];
+            const tr = el("tr");
+            tr.append(el("td", null, p), el("td", null, mine || "—"), el("td", null, q.answers[j]),
+              el("td", good ? "ok" : "bad", good ? "Correct" : "Incorrect"));
+            t.append(tr);
+          });
+          item.append(t);
+        }
+        review.append(item);
+      });
+      out.append(review);
+    }
+  </script>
+</body>
+</html>
