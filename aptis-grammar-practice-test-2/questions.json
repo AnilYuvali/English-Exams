@@ -1,0 +1,402 @@
+[
+  {
+    "number": 1,
+    "question": "Under no circumstances ______ to discuss the case with the press.",
+    "choices": [
+      "a) are staff permitted",
+      "b) staff are permitted",
+      "c) permitted are staff"
+    ],
+    "correct_answer": "a) are staff permitted"
+  },
+  {
+    "number": 2,
+    "question": "The scheme, ______ cost has trebled since 2019, is now under review.",
+    "choices": [
+      "a) of which the",
+      "b) which its",
+      "c) whose"
+    ],
+    "correct_answer": "c) whose"
+  },
+  {
+    "number": 3,
+    "question": "Not only ______ the deadline, but they also came in under budget.",
+    "choices": [
+      "a) met the team",
+      "b) the team met",
+      "c) did the team meet"
+    ],
+    "correct_answer": "c) did the team meet"
+  },
+  {
+    "number": 4,
+    "question": "It is high time the regulator ______ a formal position on the matter.",
+    "choices": [
+      "a) should take",
+      "b) took",
+      "c) takes"
+    ],
+    "correct_answer": "b) took"
+  },
+  {
+    "number": 5,
+    "question": "The results were ______ we had dared to hope.",
+    "choices": [
+      "a) as better as",
+      "b) better than",
+      "c) better as"
+    ],
+    "correct_answer": "b) better than"
+  },
+  {
+    "number": 6,
+    "question": "______ from the platform, the city looks almost uninhabited.",
+    "choices": [
+      "a) Seen",
+      "b) Seeing",
+      "c) To see"
+    ],
+    "correct_answer": "a) Seen"
+  },
+  {
+    "number": 7,
+    "question": "She denied ______ any part in the decision.",
+    "choices": [
+      "a) to have played",
+      "b) having played",
+      "c) that to play"
+    ],
+    "correct_answer": "b) having played"
+  },
+  {
+    "number": 8,
+    "question": "The regulations apply to all staff, ______ seniority.",
+    "choices": [
+      "a) regardless to",
+      "b) notwithstanding of",
+      "c) irrespective of"
+    ],
+    "correct_answer": "c) irrespective of"
+  },
+  {
+    "number": 9,
+    "question": "Such ______ that the venue had to be changed twice.",
+    "choices": [
+      "a) demand it was",
+      "b) the demand was",
+      "c) was the demand"
+    ],
+    "correct_answer": "c) was the demand"
+  },
+  {
+    "number": 10,
+    "question": "On no account ______ the machine while the indicator is red.",
+    "choices": [
+      "a) you should restart",
+      "b) you restart",
+      "c) should you restart"
+    ],
+    "correct_answer": "c) should you restart"
+  },
+  {
+    "number": 11,
+    "question": "The report stops short ______ that the practice was deliberate.",
+    "choices": [
+      "a) to allege",
+      "b) of alleging",
+      "c) from alleging"
+    ],
+    "correct_answer": "b) of alleging"
+  },
+  {
+    "number": 12,
+    "question": "Whatever ______, the outcome will be contested.",
+    "choices": [
+      "a) the panel decides",
+      "b) the panel will decide",
+      "c) does the panel decide"
+    ],
+    "correct_answer": "a) the panel decides"
+  },
+  {
+    "number": 13,
+    "question": "He resented ______ about the merger only after it had been agreed.",
+    "choices": [
+      "a) being told",
+      "b) to be told",
+      "c) having told"
+    ],
+    "correct_answer": "a) being told"
+  },
+  {
+    "number": 14,
+    "question": "Hardly ______ when the power failed again.",
+    "choices": [
+      "a) did the lights come on",
+      "b) the lights had come on",
+      "c) had the lights come on"
+    ],
+    "correct_answer": "c) had the lights come on"
+  },
+  {
+    "number": 15,
+    "question": "The evidence is compelling; ______, the court declined to intervene.",
+    "choices": [
+      "a) even so",
+      "b) even though",
+      "c) despite"
+    ],
+    "correct_answer": "a) even so"
+  },
+  {
+    "number": 16,
+    "question": "They are believed ______ the country before the warrant was issued.",
+    "choices": [
+      "a) to leave",
+      "b) to have left",
+      "c) having left"
+    ],
+    "correct_answer": "b) to have left"
+  },
+  {
+    "number": 17,
+    "question": "So thoroughly ______ that no trace of the original remains.",
+    "choices": [
+      "a) was revised the text",
+      "b) the text had been revised",
+      "c) had the text been revised"
+    ],
+    "correct_answer": "c) had the text been revised"
+  },
+  {
+    "number": 18,
+    "question": "I would sooner ______ than compromise on the wording.",
+    "choices": [
+      "a) to resign",
+      "b) resign",
+      "c) resigning"
+    ],
+    "correct_answer": "b) resign"
+  },
+  {
+    "number": 19,
+    "question": "The proposal has been shelved, ______ disappointed its authors.",
+    "choices": [
+      "a) what",
+      "b) which",
+      "c) that"
+    ],
+    "correct_answer": "b) which"
+  },
+  {
+    "number": 20,
+    "question": "There being no further business, ______.",
+    "choices": [
+      "a) the meeting was adjourned",
+      "b) adjourned the meeting",
+      "c) was the meeting adjourned"
+    ],
+    "correct_answer": "a) the meeting was adjourned"
+  },
+  {
+    "number": 21,
+    "question": "Few economists, ______ any, predicted the scale of the contraction.",
+    "choices": [
+      "a) or",
+      "b) if",
+      "c) though"
+    ],
+    "correct_answer": "b) if"
+  },
+  {
+    "number": 22,
+    "question": "The organisers had the venue ______ twenty-four hours before the event.",
+    "choices": [
+      "a) redecorated",
+      "b) redecorating",
+      "c) to redecorate"
+    ],
+    "correct_answer": "a) redecorated"
+  },
+  {
+    "number": 23,
+    "question": "______ he say so himself, nobody would have believed it.",
+    "choices": [
+      "a) Should",
+      "b) Would",
+      "c) Did"
+    ],
+    "correct_answer": "c) Did"
+  },
+  {
+    "number": 24,
+    "question": "The paper is as much a memoir ______ a work of history.",
+    "choices": [
+      "a) than",
+      "b) like",
+      "c) as"
+    ],
+    "correct_answer": "c) as"
+  },
+  {
+    "number": 25,
+    "question": "Nowhere in the archive ______ any reference to the meeting.",
+    "choices": [
+      "a) there is",
+      "b) it is",
+      "c) is there"
+    ],
+    "correct_answer": "c) is there"
+  },
+  {
+    "number": 26,
+    "question": "Match each definition to the word it defines. Use each word once only. You will not need five of the words.",
+    "items": [
+      "Open to more than one interpretation",
+      "Difficult to detect because of its small scale or indirectness",
+      "Unwilling to spend money or use resources",
+      "Impossible to put right",
+      "Producing a great deal from very little"
+    ],
+    "word_bank": [
+      "coherent",
+      "irreparable",
+      "transient",
+      "frugal",
+      "peripheral",
+      "subtle",
+      "ambiguous",
+      "candid",
+      "obsolete",
+      "prolific"
+    ],
+    "correct_answers": {
+      "Open to more than one interpretation": "ambiguous",
+      "Difficult to detect because of its small scale or indirectness": "subtle",
+      "Unwilling to spend money or use resources": "frugal",
+      "Impossible to put right": "irreparable",
+      "Producing a great deal from very little": "prolific"
+    }
+  },
+  {
+    "number": 27,
+    "question": "Match each word on the left to the word closest in meaning. Use each word once only. You will not need five of the words.",
+    "items": [
+      "alleviate",
+      "scrutinise",
+      "augment",
+      "jeopardise",
+      "condone"
+    ],
+    "word_bank": [
+      "tolerate",
+      "endanger",
+      "increase",
+      "dismantle",
+      "ease",
+      "allocate",
+      "postpone",
+      "conceal",
+      "examine",
+      "imitate"
+    ],
+    "correct_answers": {
+      "alleviate": "ease",
+      "scrutinise": "examine",
+      "augment": "increase",
+      "jeopardise": "endanger",
+      "condone": "tolerate"
+    }
+  },
+  {
+    "number": 28,
+    "question": "Choose the word that best completes each sentence. Use each word once only. You will not need five of the words.",
+    "items": [
+      "The changes were purely ______ and altered nothing of substance.",
+      "The company faces ______ competition from three new entrants.",
+      "She gave a ______ account of a very complicated dispute.",
+      "The two accounts are ______; both cannot be true.",
+      "His resignation was ______ rather than voluntary."
+    ],
+    "word_bank": [
+      "negligible",
+      "reciprocal",
+      "nominal",
+      "irreconcilable",
+      "sporadic",
+      "lucid",
+      "expedient",
+      "fierce",
+      "cosmetic",
+      "punitive"
+    ],
+    "correct_answers": {
+      "The changes were purely ______ and altered nothing of substance.": "cosmetic",
+      "The company faces ______ competition from three new entrants.": "fierce",
+      "She gave a ______ account of a very complicated dispute.": "lucid",
+      "The two accounts are ______; both cannot be true.": "irreconcilable",
+      "His resignation was ______ rather than voluntary.": "expedient"
+    }
+  },
+  {
+    "number": 29,
+    "question": "Select the word that is most often used with the word on the left. Use each word once only. You will not need five of the words.",
+    "items": [
+      "blanket",
+      "compelling",
+      "uphill",
+      "vicious",
+      "stark"
+    ],
+    "word_bank": [
+      "evidence",
+      "aftermath",
+      "consensus",
+      "circle",
+      "struggle",
+      "ban",
+      "contrast",
+      "quota",
+      "outlay",
+      "premium"
+    ],
+    "correct_answers": {
+      "blanket": "ban",
+      "compelling": "evidence",
+      "uphill": "struggle",
+      "vicious": "circle",
+      "stark": "contrast"
+    }
+  },
+  {
+    "number": 30,
+    "question": "Select the word that is most often used with the word on the left. Use each word once only. You will not need five of the words.",
+    "items": [
+      "reach",
+      "take",
+      "set",
+      "lodge",
+      "shed"
+    ],
+    "word_bank": [
+      "session",
+      "complaint",
+      "credit",
+      "balance",
+      "consensus",
+      "notice",
+      "precedent",
+      "precedence",
+      "measure",
+      "light"
+    ],
+    "correct_answers": {
+      "reach": "consensus",
+      "take": "precedence",
+      "set": "precedent",
+      "lodge": "complaint",
+      "shed": "light"
+    }
+  }
+]

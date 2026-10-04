@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aptis Grammar Practice Test 2</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Opening screen; the exam below stays hidden until "Start exam" is pressed. -->
+  <section class="landing" id="landing" aria-labelledby="landing-title">
+    <div class="landing-inner">
+      <div class="landing-copy">
+        <p class="landing-eyebrow">Aptis Advanced</p>
+        <h1 class="landing-title" id="landing-title">Aptis Grammar Practice Test 2</h1>
+        <p class="landing-lead">Practise the grammar and vocabulary section of the Aptis test. Work through each question at your own pace and check your answers whenever you choose.</p>
+
+        <ul class="landing-facts">
+          <li><strong>30</strong><span>questions</span></li>
+          <li><strong>25</strong><span>grammar items</span></li>
+          <li><strong>5</strong><span>vocabulary tasks</span></li>
+          <li><strong>C1–C2</strong><span>target level</span></li>
+        </ul>
+
+        <button class="landing-start" id="start" type="button">
+          Start exam
+          <svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true"><path d="M4 10h11m-4.5-4.5L15 10l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <p class="landing-note">No time limit &middot; Your score and a full review appear at the end.</p>
+      </div>
+
+      <div class="landing-brand">
+        <img src="assets/british-council-logo.png" alt="British Council" width="812" height="233">
+      </div>
+    </div>
+  </section>
+
+  <main class="wrap" id="exam" hidden>
+    <header class="exam-header">
+      <h1>Aptis Grammar Practice Test 2</h1>
+      <button class="btn-restart" id="restart" type="button">
+        <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><path d="M3.5 10a6.5 6.5 0 1 0 2-4.7M3.5 3.5v3.8h3.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Restart test
+      </button>
+    </header>
+    <nav class="progress" id="bar" aria-label="Questions"></nav>
+    <section class="card" id="card"></section>
+    <div class="nav">
+      <button class="btn btn-secondary" id="prev" type="button">Previous</button>
+      <button class="btn" id="next" disabled>Next</button>
+    </div>
+  </main>
+
+  <dialog class="modal" id="incomplete" aria-labelledby="incomplete-title">
+    <h2 id="incomplete-title">Test not complete</h2>
+    <p id="incomplete-text"></p>
+    <div class="modal-actions">
+      <button class="btn" id="incomplete-close" type="button">Return to test</button>
+    </div>
+  </dialog>
+
+  <dialog class="modal" id="restart-dialog" aria-labelledby="restart-title">
+    <h2 id="restart-title">Restart the test?</h2>
+    <p>All your answers will be cleared and you will return to the start page. This cannot be undone.</p>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" id="restart-cancel" type="button">Cancel</button>
+      <button class="btn" id="restart-confirm" type="button">Restart test</button>
+    </div>
+  </dialog>
+
+  <script src="data.js"></script>
+  <script>
+    const LETTERS = "abcdefghij";
+    const card = document.getElementById("card");
+    const nextBtn = document.getElementById("next");
+    const prevBtn = document.getElementById("prev");
+    const bar = document.getElementById("bar");
+
+    const userAnswers = new Array(QUESTIONS.length).fill(null);
+    const revealed = new Array(QUESTIONS.length).fill(false); // result shown only on request
+    let idx = 0;
+    let current = null; // answer being built for the question on screen
+    let showBtn = null; // "Show answer" control for the question on screen
+
+    // A question is complete once it has a choice (MC) or every part is filled (matching).
+    function isComplete(q, ans) {
+      if (ans == null) return false;
+      return q.type === "mc" ? true : ans.every(v => v != null);
+    }
+
+    // One segment per question; state is derived from userAnswers / current.
+    // Hovering shows the question number; clicking opens that question.
+    const segs = QUESTIONS.map((q, i) => {
+      const s = el("button", "seg");
+      s.type = "button";
+      s.dataset.label = `Question ${i + 1}`;
+      s.addEventListener("click", () => goTo(i));
+      bar.append(s);
+      return s;
+    });
+
+    function goTo(i) {
+      if (i === idx || i < 0 || i >= QUESTIONS.length) return;
+      userAnswers[idx] = current; // keep whatever was answered here (may be partial or none)
+      idx = i;
+      render();
+      window.scrollTo(0, 0);
+    }
+
+    function updateBar() {
+      segs.forEach((s, i) => {
+        const q = QUESTIONS[i];
+        const ans = i === idx ? current : userAnswers[i];
+        // Colour a segment only once its result has been revealed.
+        // Checked: ok/bad. Answered but not checked: "answered", applied only once the user
+        // has moved on from the question (the segment on screen stays blue until then).
+        const state = !isComplete(q, ans) ? "" : revealed[i] ? (isCorrect(q, ans) ? "ok" : "bad") : i !== idx ? "answered" : "";
+        s.className = "seg" + (i === idx ? " current" : "") + (state ? " " + state : "");
+        const label = { ok: " — correct", bad: " — incorrect", answered: " — answered, not checked" }[state] || (i === idx ? " — current" : "");
+        s.setAttribute("aria-label", `Question ${i + 1}` + label);
+        if (i === idx) s.setAttribute("aria-current", "step"); else s.removeAttribute("aria-current");
+      });
+      saveProgress();
+    }
+
+    // ---- Resume support: progress is kept in localStorage so a refresh or a closed
+    // tab doesn't lose the exam. Cleared when the test is finished. ----
+    const STORAGE_KEY = "aptis-grammar-test-2:progress";
+    const STORAGE_VERSION = 1;
+    let finished = false; // once submitted, nothing may write the progress back
+
+    function saveProgress() {
+      if (finished) return;
+      const answers = userAnswers.slice();
+      answers[idx] = current; // include the question on screen, even if partly answered
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          v: STORAGE_VERSION, n: QUESTIONS.length, idx, answers, revealed
+        }));
+      } catch (e) { /* storage unavailable (e.g. private mode): the exam still works, just without resume */ }
+    }
+
+    function clearProgress() {
+      finished = true;
+      try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+    }
+
+    // Returns the saved state if it is present and matches this test, otherwise null.
+    function loadProgress() {
+      let data;
+      try { data = JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch (e) { return null; }
+      if (!data || data.v !== STORAGE_VERSION || data.n !== QUESTIONS.length) return null;
+      if (!Array.isArray(data.answers) || data.answers.length !== QUESTIONS.length) return null;
+      if (!Array.isArray(data.revealed) || data.revealed.length !== QUESTIONS.length) return null;
+      if (!Number.isInteger(data.idx) || data.idx < 0 || data.idx >= QUESTIONS.length) return null;
+      const valid = data.answers.every((a, i) => {
+        const q = QUESTIONS[i];
+        if (a == null) return true;
+        if (q.type === "mc") return Number.isInteger(a) && a >= 0 && a < q.choices.length;
+        return Array.isArray(a) && a.length === q.prompts.length && a.every(v => v == null || q.choices.includes(v));
+      });
+      return valid ? data : null;
+    }
+
+    function el(tag, cls, text) {
+      const e = document.createElement(tag);
+      if (cls) e.className = cls;
+      if (text != null) e.textContent = text;
+      return e;
+    }
+
+    function render() {
+      const q = QUESTIONS[idx];
+      card.innerHTML = "";
+      card.append(el("div", "qnum", `Question ${idx + 1} of ${QUESTIONS.length}`));
+      card.append(el("h2", "qtext", q.text));
+      nextBtn.textContent = idx === QUESTIONS.length - 1 ? "Finish" : "Next";
+      prevBtn.disabled = idx === 0;
+      // "Restart test" is offered only on the first and the last question.
+      document.getElementById("restart").hidden = idx !== 0 && idx !== QUESTIONS.length - 1;
+
+      showBtn = el("button", "btn btn-secondary show-answer", "Show answer");
+      showBtn.type = "button";
+      if (q.type === "mc") renderMC(q); else renderMatch(q);
+      card.append(showBtn);
+      updateControls();
+    }
+
+    // Next and "Show answer" become available once the question is answered.
+    function updateControls() {
+      const q = QUESTIONS[idx];
+      const done = isComplete(q, current);
+      nextBtn.disabled = !done;
+      showBtn.hidden = !done || revealed[idx];
+      updateBar();
+    }
+
+    function renderMC(q) {
+      const saved = userAnswers[idx];
+      current = saved;
+      const list = el("ul", "options");
+      const buttons = q.choices.map((c, i) => {
+        const li = el("li");
+        const b = el("button", "option");
+        b.type = "button";
+        b.append(el("span", "letter", LETTERS[i] + ")"), el("span", null, c), el("span", "tag"));
+        b.addEventListener("click", () => pickMC(i, buttons));
+        li.append(b);
+        list.append(li);
+        return b;
+      });
+      card.append(list);
+      if (saved != null) buttons[saved].classList.add("selected");
+      showBtn.addEventListener("click", () => revealMC(q, buttons));
+      // Revisiting a question whose result was already shown: show it again.
+      if (revealed[idx]) revealMC(q, buttons);
+    }
+
+    // Selecting only marks the choice; it can be changed until the answer is shown.
+    function pickMC(i, buttons) {
+      if (revealed[idx]) return;
+      current = i;
+      buttons.forEach((b, j) => b.classList.toggle("selected", j === i));
+      updateControls();
+    }
+
+    function revealMC(q, buttons) {
+      if (current == null) return;
+      revealed[idx] = true;
+      const i = current;
+      buttons.forEach(b => { b.disabled = true; b.classList.remove("selected"); });
+      const ok = i === q.answer;
+      buttons[q.answer].classList.add("correct");
+      buttons[q.answer].querySelector(".tag").textContent = ok ? "✓ Correct" : "✓ Correct answer";
+      if (!ok) {
+        buttons[i].classList.add("wrong");
+        buttons[i].querySelector(".tag").textContent = "✗ Your answer";
+      }
+      // The banner is only for wrong answers; a correct pick is already marked on the option itself.
+      if (!ok) {
+        card.append(el("div", "feedback bad",
+          `Incorrect. The correct answer is ${LETTERS[q.answer].toUpperCase()}) ${q.choices[q.answer]}.`));
+      }
+      updateControls();
+    }
+
+    function renderMatch(q) {
+      const saved = userAnswers[idx];
+      current = saved ? saved.slice() : new Array(q.prompts.length).fill(null);
+      const box = el("div");
+      const selects = [];
+      q.prompts.forEach((p, i) => {
+        const row = el("div", "match-row");
+        const sel = el("select");
+        sel.setAttribute("aria-label", p);
+        sel.append(new Option("-- Select --", ""));
+        q.choices.forEach(c => sel.append(new Option(c, c)));
+        if (current[i] != null) sel.value = current[i];
+        const fb = el("div", "fb");
+        sel.addEventListener("change", () => pickMatch(i, sel, selects));
+        row.append(el("div", "prompt", p), sel, fb);
+        box.append(row);
+        selects.push(sel);
+      });
+      card.append(box);
+      updateWordBank(selects);
+      showBtn.addEventListener("click", () => revealMatch(q, selects));
+      if (revealed[idx]) revealMatch(q, selects);
+    }
+
+    // Selecting only records the word; it can be changed until the answer is shown.
+    function pickMatch(i, sel, selects) {
+      if (revealed[idx]) return;
+      current[i] = sel.value || null;
+      updateWordBank(selects);
+      updateControls();
+    }
+
+    // "Use each word once only": a word chosen in one row can't be picked in another.
+    function updateWordBank(selects) {
+      selects.forEach((s, i) => {
+        [...s.options].forEach(o => {
+          if (o.value) o.disabled = o.value !== current[i] && current.includes(o.value);
+        });
+      });
+    }
+
+    function revealMatch(q, selects) {
+      if (!isComplete(q, current)) return;
+      revealed[idx] = true;
+      selects.forEach((sel, i) => {
+        sel.disabled = true;
+        const ok = current[i] === q.answers[i];
+        sel.classList.add(ok ? "correct" : "wrong");
+        const fb = sel.parentNode.querySelector(".fb");
+        fb.className = "fb " + (ok ? "ok" : "bad");
+        fb.textContent = ok ? "✓ Correct" : `✗ Incorrect — correct answer: ${q.answers[i]}`;
+      });
+      updateControls();
+    }
+
+    prevBtn.addEventListener("click", () => goTo(idx - 1));
+
+    nextBtn.addEventListener("click", () => {
+      if (nextBtn.disabled) return;
+      userAnswers[idx] = current;
+      if (idx < QUESTIONS.length - 1) {
+        idx++;
+        render();
+        window.scrollTo(0, 0);
+      } else {
+        // Questions can be skipped via the segments; list any unanswered ones instead of submitting.
+        const missing = QUESTIONS.map((q, i) => i).filter(i => !isComplete(QUESTIONS[i], userAnswers[i]));
+        if (missing.length) { showIncomplete(missing.map(i => i + 1)); return; }
+        const payload = encodeURIComponent(JSON.stringify(userAnswers));
+        try { sessionStorage.setItem("aptis-grammar-test-2:answers", JSON.stringify(userAnswers)); } catch (e) {}
+        clearProgress(); // finished: a new visit starts a fresh test
+        location.href = "results.html#a=" + payload;
+      }
+    });
+
+    const modal = document.getElementById("incomplete");
+
+    function showIncomplete(nums) {
+      const list = nums.length === 1 ? String(nums[0])
+        : nums.slice(0, -1).join(", ") + " and " + nums[nums.length - 1];
+      document.getElementById("incomplete-text").textContent = nums.length === 1
+        ? `You have not answered all the questions yet. Please answer question ${list} before submitting your test.`
+        : `You have not answered all the questions yet. Please answer the following ${nums.length} questions before submitting your test: ${list}.`;
+      modal.showModal();
+    }
+
+    document.getElementById("incomplete-close").addEventListener("click", () => modal.close());
+    // Clicking the dimmed backdrop also closes the dialog.
+    modal.addEventListener("click", e => { if (e.target === modal) modal.close(); });
+
+    function openExam(startIdx) {
+      document.getElementById("landing").hidden = true;
+      document.getElementById("exam").hidden = false;
+      idx = startIdx;
+      render();
+      window.scrollTo(0, 0);
+    }
+
+    document.getElementById("start").addEventListener("click", () => openExam(0));
+
+    // An exam already in progress: skip the landing page and continue where the user left off.
+    const saved = loadProgress();
+    if (saved) {
+      saved.answers.forEach((a, i) => (userAnswers[i] = a));
+      saved.revealed.forEach((r, i) => (revealed[i] = r === true));
+      openExam(saved.idx);
+    }
+
+    // "Restart test": confirm, then wipe all answers and the saved progress and go back to the landing page.
+    const restartDialog = document.getElementById("restart-dialog");
+    document.getElementById("restart").addEventListener("click", () => restartDialog.showModal());
+    document.getElementById("restart-cancel").addEventListener("click", () => restartDialog.close());
+    restartDialog.addEventListener("click", e => { if (e.target === restartDialog) restartDialog.close(); });
+    document.getElementById("restart-confirm").addEventListener("click", () => {
+      userAnswers.fill(null);
+      revealed.fill(false);
+      current = null;
+      try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+      restartDialog.close();
+      document.getElementById("exam").hidden = true;
+      document.getElementById("landing").hidden = false;
+      window.scrollTo(0, 0);
+    });
+
+    // Last-chance save when the page is closed, reloaded or sent to the background.
+    window.addEventListener("pagehide", () => { if (!document.getElementById("exam").hidden) saveProgress(); });
+  </script>
+</body>
+</html>
